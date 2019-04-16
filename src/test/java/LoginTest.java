@@ -5,6 +5,8 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import static java.lang.Thread.sleep;
+
 public class LoginTest {
 
     @Test
@@ -19,7 +21,23 @@ public class LoginTest {
         loginPassword.sendKeys("Semen1002");
         WebElement loginSubmit = driver.findElement(By.xpath("//input[@id='login-submit']"));
         loginSubmit.click();
+        try {
+            sleep(3000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         Assert.assertEquals(driver.getTitle(), "LinkedIn");
+        WebElement userMenu = driver.findElement(By.xpath("//li[@id='profile-nav-item']"));
+        userMenu.click();
+        Assert.assertTrue(userMenu.isDisplayed(), "Item " + userMenu + "is not displayed");
+        WebElement userName = driver.findElement(By.xpath("//ul[@id='nav-settings__dropdown-options']//h3"));
+        Assert.assertEquals(userName.getText(), "Semen Cement" , "User name is incorrect.");
 
     }
+    @Test
+    public void negativeLoginTest () {
+
+
+    }
+
 }
