@@ -13,12 +13,12 @@ public class LoginTest {
         WebDriver driver = new ChromeDriver();
         driver.get("https://www.linkedin.com");
         Assert.assertEquals(driver.getTitle(), "LinkedIn: Log In or Sign Up ");
-        WebElement sessionKey = driver.findElement(By.xpath("//input[@name='session_key']"));
-        sessionKey.sendKeys("semencement2@gmail.com");
-        WebElement sessionPassword = driver.findElement(By.xpath("//input[@name='session_password']"));
-        sessionPassword.sendKeys("Semen1002");
-        WebElement signIn = driver.findElement(By.xpath("//input[@class='login submit-button']"));
-        signIn.click();
+        WebElement loginEmail = driver.findElement(By.xpath("//input[@id='login-email']"));
+        loginEmail.sendKeys("semencement2@gmail.com");
+        WebElement loginPassword = driver.findElement(By.xpath("//input[@id='login-password']"));
+        loginPassword.sendKeys("Semen1002");
+        WebElement loginSubmit = driver.findElement(By.xpath("//input[@id='login-submit']"));
+        loginSubmit.click();
         Assert.assertEquals(driver.getTitle(), "LinkedIn");
 
     }
