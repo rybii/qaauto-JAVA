@@ -1,25 +1,29 @@
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-import static java.lang.Thread.sleep;
-
 public class LoginTest {
 
-    @Test
-    public void successfulLoginTest() throws InterruptedException {
+    @DataProvider
+    public Object[][] validDataProvider() {
+        return new Object[][]{
+                { "semencement2@gmail.com", "Semen1002" },
+                { "SEMENcement2@gmail.com", "Semen1002" }
+        };
+    }
+
+    @Test(dataProvider = "validDataProvider")
+    public void successfulLoginTest(String userEmail, String userPassword) throws InterruptedException {
         System.setProperty("webdriver.chrome.driver", "C:\\Users\\vryb\\Downloads\\chromedriver_win32\\chromedriver.exe");
         WebDriver driver = new ChromeDriver();
         driver.get("https://www.linkedin.com");//открыть сайт
         driver.manage().window().maximize();
-        Assert.assertEquals(driver.getTitle(),"LinkedIn: Log In or Sign Up ");//проверить этот текст
+        Assert.assertEquals(driver.getTitle(), "LinkedIn: Log In or Sign Up ");//проверить этот текст
 
         LoginPage loginPage = new LoginPage(driver); // создать физически в памяти экземпляр класса в переменной
-        loginPage.login("semencement2@gmail.com","Semen1002" ); // передали 2 параметра в классе login
+        loginPage.login(userEmail, userPassword); // передали 2 параметра в классе login
 
 
         // loginPage - переменная
@@ -30,10 +34,22 @@ public class LoginTest {
         HomePage homePage = new HomePage(driver);
         Assert.assertTrue(homePage.isProfileMenuItemDisplayed(), "Home page is not loaded");
         homePage.clickOnProfileMenu();
-        Assert.assertEquals(homePage.getUserNameTextDisplayed(),"Semen Cement" );
+        Assert.assertEquals(homePage.getUserNameTextDisplayed(), "Semen Cement");
 
         driver.quit();
+    }
 
+    @Test
+    public void negativeLoginTestEmptyFields() {
+        System.setProperty("webdriver.chrome.driver", "C:\\Users\\vryb\\Downloads\\chromedriver_win32\\chromedriver.exe");
+        WebDriver driver = new ChromeDriver();
+        driver.get("https://www.linkedin.com");
+        Assert.assertEquals(driver.getTitle(),"LinkedIn: Log In or Sign Up ");
+        LoginPage loginPage = new LoginPage(driver);
+        loginPage.login("", "");
+        Assert.assertTrue(loginPage.isPageLoaded(), "Login Page isn't loaded.");
+        driver.quit();
+        }
     }
 
 //    @Test
@@ -77,7 +93,5 @@ public class LoginTest {
 //        WebElement usernameError = driver.findElement(By.id("error-for-username"));
 //        Assert.assertTrue(usernameError.isDisplayed(), "Item " + usernameError + "is not displayed");
 
-
-        }
 
 
