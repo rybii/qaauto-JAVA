@@ -1,97 +1,81 @@
+import com.sun.xml.internal.bind.v2.TODO;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.testng.Assert;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 public class LoginTest {
+    private WebDriver driver;
+    private LoginPage loginPage;
+
+    @BeforeMethod
+    public void beforeMethod() {
+        System.setProperty("webdriver.chrome.driver", "C:\\Users\\vryb\\Downloads\\chromedriver_win32\\chromedriver.exe");
+        driver = new ChromeDriver();
+        driver.get("https://www.linkedin.com/");//открыть сайт
+        loginPage = new LoginPage(driver); // создать физически в памяти экземпляр класса в переменной
+    }
+
+    @AfterMethod
+    public void afterMethod() {
+        driver.quit();
+    }
 
     @DataProvider
     public Object[][] validDataProvider() {
         return new Object[][]{
-                { "semencement2@gmail.com", "Semen1002" },
-                { "SEMENcement2@gmail.com", "Semen1002" }
+            {"semencement2@gmail.com", "Semen1002"},
+            //{"SEMENcement2@gmail.com", "Semen1002"}
         };
     }
 
     @Test(dataProvider = "validDataProvider")
-    public void successfulLoginTest(String userEmail, String userPassword) throws InterruptedException {
-        System.setProperty("webdriver.chrome.driver", "C:\\Users\\vryb\\Downloads\\chromedriver_win32\\chromedriver.exe");
-        WebDriver driver = new ChromeDriver();
-        driver.get("https://www.linkedin.com");//открыть сайт
-        driver.manage().window().maximize();
-        Assert.assertEquals(driver.getTitle(), "LinkedIn: Log In or Sign Up ");//проверить этот текст
-
-        LoginPage loginPage = new LoginPage(driver); // создать физически в памяти экземпляр класса в переменной
-        loginPage.login(userEmail, userPassword); // передали 2 параметра в классе login
-
-
-        // loginPage - переменная
-        // LoginPage()  - новый класс
-        // LoginPage - тип данных
-
-
-        HomePage homePage = new HomePage(driver);
+    public void successfulLoginTest(String userEmail, String userPassword) {
+        HomePage homePage = loginPage.login(userEmail, userPassword); // передали 2 параметра в классе login
         Assert.assertTrue(homePage.isProfileMenuItemDisplayed(), "Home page is not loaded");
         homePage.clickOnProfileMenu();
         Assert.assertEquals(homePage.getUserNameTextDisplayed(), "Semen Cement");
-
-        driver.quit();
     }
 
-    @Test
+    @DataProvider
+    public Object[][] invalidDataProviderBothFields() {
+        return new Object[][]{
+            {"", ""},
+            {"SEMENcement3@gmail.com", "Semen1003"}
+        };
+    }
+
+    @Test(dataProvider = "invalidDataProviderBothFields")
     public void negativeLoginTestEmptyFields() {
-        System.setProperty("webdriver.chrome.driver", "C:\\Users\\vryb\\Downloads\\chromedriver_win32\\chromedriver.exe");
-        WebDriver driver = new ChromeDriver();
-        driver.get("https://www.linkedin.com");
-        Assert.assertEquals(driver.getTitle(),"LinkedIn: Log In or Sign Up ");
-        LoginPage loginPage = new LoginPage(driver);
-        loginPage.login("", "");
+        loginPage.loginToLogin("", ""); //разобраться почему перед loginPage нету loginPage как в двух других тестах
         Assert.assertTrue(loginPage.isPageLoaded(), "Login Page isn't loaded.");
-        driver.quit();
-        }
     }
 
-//    @Test
-//    public void negativeLoginTestPassword() {
-//        System.setProperty("webdriver.chrome.driver", "C:\\Users\\vryb\\Downloads\\chromedriver_win32\\chromedriver.exe");
-//        WebDriver driver = new ChromeDriver();
-//        driver.get("https://www.linkedin.com");
-//        Assert.assertEquals(driver.getTitle(), "LinkedIn: Log In or Sign Up ");
-//        WebElement loginEmail = driver.findElement(By.xpath("//input[@id='login-email']"));
-//        loginEmail.sendKeys("semencement2@gmail.com");
-//        WebElement loginPassword = driver.findElement(By.xpath("//input[@id='login-password']"));
-//        loginPassword.sendKeys("Semen1003");
-//        WebElement loginSubmit = driver.findElement(By.xpath("//input[@id='login-submit']"));
-//        loginSubmit.click();
-//        try {
-//            sleep(3000);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
-//        WebElement passwordError = driver.findElement(By.id("error-for-password"));
-//        Assert.assertTrue(passwordError.isDisplayed(), "Item " + passwordError + "is not displayed");
-//    }
-//
-//    @Test
-//    public void negativeLoginTestUserName () {
-//        System.setProperty("webdriver.chrome.driver", "C:\\Users\\vryb\\Downloads\\chromedriver_win32\\chromedriver.exe");
-//        WebDriver driver = new ChromeDriver();
-//        driver.get("https://www.linkedin.com");
-//        Assert.assertEquals(driver.getTitle(), "LinkedIn: Log In or Sign Up ");
-//        WebElement loginEmail = driver.findElement(By.xpath("//input[@id='login-email']"));
-//        loginEmail.sendKeys("semencementbvuibuebvsbvsieubvsievbseseee2@gmail.com");
-//        WebElement loginPassword = driver.findElement(By.xpath("//input[@id='login-password']"));
-//        loginPassword.sendKeys("Semen1002");
-//        WebElement loginSubmit = driver.findElement(By.xpath("//input[@id='login-submit']"));
-//        loginSubmit.click();
-//        try {
-//            sleep(3000);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
-//        WebElement usernameError = driver.findElement(By.id("error-for-username"));
-//        Assert.assertTrue(usernameError.isDisplayed(), "Item " + usernameError + "is not displayed");
+    @DataProvider
+    public Object[][] invalidDataProviderLesson() {
+        return new Object[][]{
+            {"semencement2@gmail.com", "Semen1003", "", "Hmm, that's not the right password. Please try again or request a new one."},
+                //{"semencement4@gmail.com", "Semen1002", "Hmm, we don't recognize that email. Please try again.", ""}
+        };
+    }
+
+    @Test(dataProvider = "invalidDataProviderLesson")
+    public void negativeLoginWithInvalidData(String userEmail,
+                                             String userPassword,
+                                             String userEmailValidationMessage,
+                                             String userPasswordValidationMessage) {
+        Assert.assertTrue(loginPage.isPageLoaded(), "Login Page isn't loaded.");
+        LoginSubmitPage loginSubmitPage = loginPage.loginSubmitPage(userEmail, userPassword);
+        Assert.assertTrue(loginSubmitPage.isPageLoaded(), "LoginSubmit page is not loaded.");
+
+        Assert.assertEquals(loginSubmitPage.getUserEmailValidationMessage(), userEmailValidationMessage, "Wrong validation message on user email");
+
+        Assert.assertEquals(loginSubmitPage.getUserPasswordValidationMessage(), userPasswordValidationMessage, "Wrong validation message on user email");
+    }
+}
 
 
 
