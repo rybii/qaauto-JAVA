@@ -1,28 +1,8 @@
-import com.sun.xml.internal.bind.v2.TODO;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
 import org.testng.Assert;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-public class LoginTest {
-    private WebDriver driver;
-    private LoginPage loginPage;
-
-    @BeforeMethod
-    public void beforeMethod() {
-        System.setProperty("webdriver.chrome.driver", "C:\\Users\\vryb\\Downloads\\chromedriver_win32\\chromedriver.exe");
-        driver = new ChromeDriver();
-        driver.get("https://www.linkedin.com/");//открыть сайт
-        loginPage = new LoginPage(driver); // создать физически в памяти экземпляр класса в переменной
-    }
-
-    @AfterMethod
-    public void afterMethod() {
-        driver.quit();
-    }
+public class LoginTest extends BaseTest{
 
     @DataProvider
     public Object[][] validDataProvider() {
