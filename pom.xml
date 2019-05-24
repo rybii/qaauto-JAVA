@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.ciklum</groupId>
-    <artifactId>qaauto-02.04.2019</artifactId>
+    <artifactId>qaauto-2.04.2019</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <dependencies>
@@ -20,6 +20,23 @@
             <version>6.14.3</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>com.sun.mail</groupId>
+            <artifactId>javax.mail</artifactId>
+            <version>1.6.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.9</version>
+        </dependency>
+        <dependency>
+            <groupId>io.github.bonigarcia</groupId>
+            <artifactId>webdrivermanager</artifactId>
+            <version>3.6.0</version>
+            <scope>test</scope>
+        </dependency>
+
 
     </dependencies>
 
