@@ -1,0 +1,26 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+
+<suite name="Linkedin Login Tests">
+
+    <test name="Positive">
+        <classes>
+            <class name="LoginTest">
+                <methods>
+                    <include name="successfulLoginTest" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <test name="Negative">
+        <classes>
+            <class name="LoginTest">
+                <methods>
+                    <include name="negativeLoginTestEmptyFields" />
+                    <include name="negativeLoginWithInvalidData" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+</suite>

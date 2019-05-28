@@ -1,0 +1,26 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+
+<suite name="Login Test Suite" verbose="1" >
+    <test name="de" >
+        <parameter name="browserURL" value="de.linkedin.com"/>
+        <classes>
+            <class name="LoginTest"></class>
+        </classes>
+    </test>
+
+    <test name="ua" >
+        <parameter name="browserURL" value="ua.linkedin.com"/>
+        <classes>
+            <class name="LoginTest"></class>
+        </classes>
+    </test>
+
+    <test name="en" >
+        <parameter name="browserURL" value="linkedin.com"/>
+        <classes>
+            <class name="LoginTest"></class>
+        </classes>
+    </test>
+
+
+</suite>
